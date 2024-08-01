@@ -1,8 +1,11 @@
 import Mathlib.RingTheory.TensorProduct.Basic
+import Mathlib.LinearAlgebra.TensorPower
 
 suppress_compilation
 
 open TensorProduct
+
+section
 
 variable (k K V W W' : Type*)
 variable {p q : ℕ}
@@ -75,8 +78,18 @@ def _root_.LinearMap.galAct (σ : K ≃ₐ[k] K) (f : K ⊗[k] V →ₗ[K] K ⊗
 
 @[simp]
 lemma _root_.LinearMap.galAct_extendScalars_apply
+    (σ : K ≃ₐ[k] K) (f : K ⊗[k] V →ₗ[K] K ⊗[k] W) (a : K) (v : V) :
+    LinearMap.galAct σ f (a ⊗ₜ v) =
+    LinearMap.rTensor W σ.toLinearMap (f $ σ.symm a ⊗ₜ v) := by
+  simp only [LinearMap.galAct, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply,
+    LinearMap.rTensor_tmul, AlgEquiv.toLinearMap_apply]
+
+@[simp]
+lemma _root_.LinearMap.galAct_extendScalars_apply'
     (σ : K ≃ₐ[k] K) (f : V →ₗ[k] W) (a : K) (v : V) :
     LinearMap.galAct σ (f.extendScalars K) (a ⊗ₜ v) = a ⊗ₜ f v := by
   simp only [LinearMap.galAct, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply,
     LinearMap.rTensor_tmul, AlgEquiv.toLinearMap_apply, LinearMap.extendScalars_apply,
     AlgEquiv.apply_symm_apply]
+
+end
